@@ -74,7 +74,6 @@ function renderRoute(route) {
       <div class="photo-grid">
         <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo1.jpg" alt="Фото 1">
         <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo2.jpg" alt="Фото 2">
-        <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo3.jpg" alt="Фото 3">
       </div>
     ` : '';
 
