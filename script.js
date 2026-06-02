@@ -85,14 +85,15 @@ function renderRoute(route) {
     const idx = routeData.index;
     const title = idx === 1 ? SITE_TEXT.chapter1Title : SITE_TEXT.chapter2Title;
     const text = idx === 1 ? SITE_TEXT.chapter1Text : SITE_TEXT.chapter2Text;
-    const photos = idx === 1 ? `
-      <div class="photo-grid">
-        <img src="photos/photo1.jpg" alt="photo1" loading="lazy" onerror="this.style.opacity='0.3'">
-        <img src="photos/photo2.jpg" alt="photo2" loading="lazy" onerror="this.style.opacity='0.3'">
-        <img src="photos/photo3.jpg" alt="photo3" loading="lazy" onerror="this.style.opacity='0.3'">
-      </div>
-    ` : '';
+    // ... весь код остаётся таким же, как у вас, но меняется только часть с photos:
 
+const photos = idx === 1 ? `
+  <div class="photo-grid">
+    <img src="photos/photo1.jpg" alt="Алинка" loading="lazy" onerror="this.style.opacity='0.3'">
+    <img src="photos/photo2.jpg" alt="Алинка" loading="lazy" onerror="this.style.opacity='0.3'">
+    <img src="photos/photo3.jpg" alt="Алинка" loading="lazy" onerror="this.style.opacity='0.3'">
+  </div>
+` : '';
     html = `
       <section class="chapter fade-up show active">
         <h2>${title}</h2>
