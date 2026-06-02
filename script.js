@@ -25,18 +25,11 @@ function setRouteToUrl(route, addToHistory = true) {
     else if (route === '/chapter/1') hash = '#chapter/1';
     else if (route === '/chapter/2') hash = '#chapter/2';
     else if (route === '/final') hash = '#final';
-    if (addToHistory) {
-      window.location.hash = hash;
-    } else {
-      const newUrl = window.location.href.split('#')[0] + hash;
-      history.replaceState(null, '', newUrl);
-    }
+    if (addToHistory) window.location.hash = hash;
+    else history.replaceState(null, '', window.location.href.split('#')[0] + hash);
   } else {
-    if (addToHistory) {
-      history.pushState({ route }, '', route);
-    } else {
-      history.replaceState({ route }, '', route);
-    }
+    if (addToHistory) history.pushState({ route }, '', route);
+    else history.replaceState({ route }, '', route);
   }
 }
 
@@ -76,12 +69,12 @@ function renderRoute(route) {
     const title = idx === 1 ? SITE_TEXT.chapter1Title : SITE_TEXT.chapter2Title;
     const text = idx === 1 ? SITE_TEXT.chapter1Text : SITE_TEXT.chapter2Text;
     
-    // ФОТО РАБОТАЮТ - ПРОВЕРЕНО
+    // АБСОЛЮТНЫЕ ССЫЛКИ НА ФОТО (работают всегда)
     const photos = idx === 1 ? `
       <div class="photo-grid">
-        <img src="/alinka-book/photos/photo1.jpg" alt="Фото 1" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+1'">
-        <img src="/alinka-book/photos/photo2.jpg" alt="Фото 2" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+2'">
-        <img src="/alinka-book/photos/photo3.jpg" alt="Фото 3" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+3'">
+        <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo1.jpg" alt="Фото 1">
+        <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo2.jpg" alt="Фото 2">
+        <img src="https://raw.githubusercontent.com/lggerey228-sketch/alinka-book/main/photos/photo3.jpg" alt="Фото 3">
       </div>
     ` : '';
 
@@ -89,7 +82,7 @@ function renderRoute(route) {
       <section class="chapter fade-up show active">
         <h2>${title}</h2>
         ${photos}
-        <p style="white-space:pre-wrap; font-size:24px; line-height:1.6;">${text}</p>
+        <p style="white-space:pre-wrap;">${text}</p>
       </section>
     `;
   } else if (routeData.type === 'final') {
@@ -145,17 +138,10 @@ function getPrevRoute(current) {
   }
 }
 
-if (!isFileProtocol) {
-  window.addEventListener('popstate', (event) => {
-    const route = event.state?.route || getCurrentRouteFromUrl();
-    renderRoute(route);
-  });
-} else {
-  window.addEventListener('hashchange', () => {
-    const route = getCurrentRouteFromUrl();
-    renderRoute(route);
-  });
-}
+window.addEventListener('popstate', (event) => {
+  const route = event.state?.route || getCurrentRouteFromUrl();
+  renderRoute(route);
+});
 
 prevBtn.addEventListener('click', () => {
   const newRoute = getPrevRoute(currentRoute);
@@ -183,16 +169,5 @@ document.getElementById('heroTitle').innerText = SITE_TEXT.heroTitle;
 document.getElementById('heroText').innerText = SITE_TEXT.heroText;
 
 const startRoute = getCurrentRouteFromUrl();
-if (routes[startRoute]) {
-  renderRoute(startRoute);
-  if (isFileProtocol && startRoute !== '/') {
-    const hashForRoute = startRoute === '/chapter/1' ? '#chapter/1' : (startRoute === '/chapter/2' ? '#chapter/2' : '#final');
-    if (window.location.hash !== hashForRoute) {
-      history.replaceState(null, '', window.location.href.split('#')[0] + hashForRoute);
-    }
-  } else if (isFileProtocol && startRoute === '/' && window.location.hash) {
-    history.replaceState(null, '', window.location.href.split('#')[0]);
-  }
-} else {
-  navigateTo('/', false);
-}
+if (routes[startRoute]) renderRoute(startRoute);
+else navigateTo('/', false);
