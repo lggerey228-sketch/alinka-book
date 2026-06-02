@@ -89,8 +89,8 @@ function renderRoute(route) {
 
 const photos = idx === 1 ? `
   <div class="photo-grid">
-    <img src="photos/photo1.jpg" alt="Алинка" loading="lazy" onerror="this.style.opacity='0.3'">
-    <img src="photos/photo2.jpg" alt="Алинка" loading="lazy" onerror="this.style.opacity='0.3'">
+    <img src="photos/photo1.jpg">
+    <img src="photos/photo2.jpg">
   </div>
 ` : '';
     html = `
