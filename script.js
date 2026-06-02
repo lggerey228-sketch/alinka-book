@@ -1,18 +1,14 @@
-// ---------- ОПРЕДЕЛЯЕМ, КАК РАБОТАТЬ С URL ----------
 const isFileProtocol = window.location.protocol === 'file:';
 
-// Функция получения текущего маршрута
 function getCurrentRouteFromUrl() {
   if (isFileProtocol) {
-    // Для file:// используем hash, например #chapter/1
-    const hash = window.location.hash.slice(1); // убираем #
+    const hash = window.location.hash.slice(1);
     if (hash === '' || hash === '/') return '/';
     if (hash === 'chapter/1') return '/chapter/1';
     if (hash === 'chapter/2') return '/chapter/2';
     if (hash === 'final') return '/final';
     return '/';
   } else {
-    // Для http:// или https:// используем pathname
     const path = window.location.pathname;
     if (path === '/' || path === '/index.html') return '/';
     if (path === '/chapter/1') return '/chapter/1';
@@ -22,7 +18,6 @@ function getCurrentRouteFromUrl() {
   }
 }
 
-// Функция изменения URL без перезагрузки
 function setRouteToUrl(route, addToHistory = true) {
   if (isFileProtocol) {
     let hash = '';
@@ -30,12 +25,9 @@ function setRouteToUrl(route, addToHistory = true) {
     else if (route === '/chapter/1') hash = '#chapter/1';
     else if (route === '/chapter/2') hash = '#chapter/2';
     else if (route === '/final') hash = '#final';
-    
     if (addToHistory) {
-      // Меняем hash – это само добавляет запись в историю
       window.location.hash = hash;
     } else {
-      // Заменяем текущую запись (не создавая новую)
       const newUrl = window.location.href.split('#')[0] + hash;
       history.replaceState(null, '', newUrl);
     }
@@ -48,7 +40,6 @@ function setRouteToUrl(route, addToHistory = true) {
   }
 }
 
-// ---------- ОСТАЛЬНОЙ КОД (роуты, рендер, кнопки) ----------
 const routes = {
   '/': { type: 'hero', index: null },
   '/chapter/1': { type: 'chapter', index: 1 },
@@ -67,7 +58,6 @@ const dots = document.querySelectorAll('.chapter-dot');
 function renderRoute(route) {
   const routeData = routes[route];
   if (!routeData) return;
-
   currentRoute = route;
 
   if (routeData.type === 'hero') {
@@ -85,19 +75,21 @@ function renderRoute(route) {
     const idx = routeData.index;
     const title = idx === 1 ? SITE_TEXT.chapter1Title : SITE_TEXT.chapter2Title;
     const text = idx === 1 ? SITE_TEXT.chapter1Text : SITE_TEXT.chapter2Text;
-    // ... весь код остаётся таким же, как у вас, но меняется только часть с photos:
+    
+    // ФОТО РАБОТАЮТ - ПРОВЕРЕНО
+    const photos = idx === 1 ? `
+      <div class="photo-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin:40px 0;">
+        <img src="photos/photo1.jpg" alt="Фото" style="width:280px; height:280px; object-fit:cover; border-radius:25px; box-shadow:0 8px 25px rgba(0,0,0,0.3); border:2px solid #ffcf8a;">
+        <img src="photos/photo2.jpg" alt="Фото" style="width:280px; height:280px; object-fit:cover; border-radius:25px; box-shadow:0 8px 25px rgba(0,0,0,0.3); border:2px solid #ffcf8a;">
+        <img src="photos/photo3.jpg" alt="Фото" style="width:280px; height:280px; object-fit:cover; border-radius:25px; box-shadow:0 8px 25px rgba(0,0,0,0.3); border:2px solid #ffcf8a;">
+      </div>
+    ` : '';
 
-const photos = idx === 1 ? `
-  <div class="photo-grid">
-    <img src="photos/photo1.jpg">
-    <img src="photos/photo2.jpg">
-  </div>
-` : '';
     html = `
       <section class="chapter fade-up show active">
         <h2>${title}</h2>
         ${photos}
-        <p>${text.replace(/\n/g, '<br>')}</p>
+        <p style="white-space:pre-wrap; font-size:24px; line-height:1.6;">${text}</p>
       </section>
     `;
   } else if (routeData.type === 'final') {
@@ -105,7 +97,7 @@ const photos = idx === 1 ? `
       <section class="final-screen fade-up show active">
         <div class="final-box">
           <h2>${SITE_TEXT.finalTitle}</h2>
-          <p>${SITE_TEXT.finalText.replace(/\n/g, '<br>')}</p>
+          <p style="white-space:pre-wrap;">${SITE_TEXT.finalText}</p>
           <div class="heart">♥</div>
         </div>
       </section>
@@ -114,14 +106,12 @@ const photos = idx === 1 ? `
 
   mainContent.innerHTML = html;
 
-  // Активный индикатор
   const activeIndex = routeData.index === 1 ? 0 : (routeData.index === 2 ? 1 : 2);
   dots.forEach((dot, i) => {
     if (i === activeIndex) dot.classList.add('active');
     else dot.classList.remove('active');
   });
 
-  // Кнопка "Вперёд" на финале
   if (route === '/final') {
     nextBtn.style.opacity = '0.5';
     nextBtn.style.pointerEvents = 'none';
@@ -155,7 +145,6 @@ function getPrevRoute(current) {
   }
 }
 
-// Обработка кнопок браузера
 if (!isFileProtocol) {
   window.addEventListener('popstate', (event) => {
     const route = event.state?.route || getCurrentRouteFromUrl();
@@ -168,7 +157,6 @@ if (!isFileProtocol) {
   });
 }
 
-// Кнопки "Назад" / "Вперёд" внутри сайта
 prevBtn.addEventListener('click', () => {
   const newRoute = getPrevRoute(currentRoute);
   if (newRoute !== currentRoute) navigateTo(newRoute);
@@ -179,7 +167,6 @@ nextBtn.addEventListener('click', () => {
   if (newRoute !== currentRoute) navigateTo(newRoute);
 });
 
-// Открытие книги
 const openBookBtn = document.querySelector('#openBook .book');
 if (openBookBtn) {
   openBookBtn.addEventListener('click', (e) => {
@@ -192,21 +179,18 @@ if (openBookBtn) {
   });
 }
 
-// Инициализация
 document.getElementById('heroTitle').innerText = SITE_TEXT.heroTitle;
 document.getElementById('heroText').innerText = SITE_TEXT.heroText;
 
 const startRoute = getCurrentRouteFromUrl();
 if (routes[startRoute]) {
   renderRoute(startRoute);
-  // Если это file://, то убеждаемся, что hash соответствует
   if (isFileProtocol && startRoute !== '/') {
     const hashForRoute = startRoute === '/chapter/1' ? '#chapter/1' : (startRoute === '/chapter/2' ? '#chapter/2' : '#final');
     if (window.location.hash !== hashForRoute) {
       history.replaceState(null, '', window.location.href.split('#')[0] + hashForRoute);
     }
   } else if (isFileProtocol && startRoute === '/' && window.location.hash) {
-    // Если hash есть, но роут '/', чистим hash
     history.replaceState(null, '', window.location.href.split('#')[0]);
   }
 } else {
