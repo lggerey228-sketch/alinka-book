@@ -77,11 +77,11 @@ function renderRoute(route) {
     const text = idx === 1 ? SITE_TEXT.chapter1Text : SITE_TEXT.chapter2Text;
     
     // ФОТО РАБОТАЮТ - ПРОВЕРЕНО
-        const photos = idx === 1 ? `
+    const photos = idx === 1 ? `
       <div class="photo-grid">
-        <img src="/alinka-book/photos/photo1.jpg" alt="Фото 1">
-        <img src="/alinka-book/photos/photo2.jpg" alt="Фото 2">
-        <img src="/alinka-book/photos/photo3.jpg" alt="Фото 3">
+        <img src="/alinka-book/photos/photo1.jpg" alt="Фото 1" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+1'">
+        <img src="/alinka-book/photos/photo2.jpg" alt="Фото 2" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+2'">
+        <img src="/alinka-book/photos/photo3.jpg" alt="Фото 3" onerror="this.src='https://via.placeholder.com/280x280?text=Фото+3'">
       </div>
     ` : '';
 
